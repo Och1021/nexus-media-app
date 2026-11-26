@@ -1,0 +1,95 @@
+{
+  "name": "nexus-media",
+  "productName": "Nexus Media",
+  "version": "1.0.0",
+  "description": "Nexus Media — Media for Sustainable Impact",
+  "author": "Nexus Media",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win --publish never",
+    "dist:mac": "electron-builder --mac --publish never"
+  },
+  "dependencies": {
+    "electron-updater": "^6.6.2"
+  },
+  "devDependencies": {
+    "electron": "^37.2.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "mn.nexusmedia.app",
+    "productName": "Nexus Media",
+    "copyright": "© Nexus Media",
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "offline.html",
+      "build/icon.png",
+      "build/badge.png",
+      "build/logo.png",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "NexusMedia-Setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Nexus Media",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ],
+      "category": "public.app-category.business",
+      "identity": "-",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "artifactName": "NexusMedia-mac-${arch}.${ext}"
+    },
+    "dmg": {
+      "title": "Nexus Media"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Och1021",
+        "repo": "nexus-media-app",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "repository": "https://github.com/Och1021/nexus-media-app"
+}

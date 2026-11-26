@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nexus Media</title>
+<style>
+  html,body{height:100%;margin:0;background:#070707;color:#f2f2f2;font:16px/1.5 "Segoe UI",-apple-system,BlinkMacSystemFont,Inter,sans-serif}
+  body{display:grid;place-items:center;overflow:hidden}
+  .glow{position:fixed;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(230,40,30,.35),rgba(190,20,10,.08) 45%,transparent 68%);animation:drift 9s ease-in-out infinite alternate}
+  @keyframes drift{from{transform:translate(-18%,-12%)}to{transform:translate(18%,10%)}}
+  .card{position:relative;text-align:center;padding:40px 32px;max-width:420px}
+  img{width:96px;height:96px;filter:drop-shadow(0 0 30px rgba(230,50,45,.6));animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{50%{transform:scale(1.06)}}
+  h1{font-size:24px;margin:22px 0 8px;letter-spacing:.02em}
+  p{margin:0 0 24px;color:#bdbdbd}
+  button{border:0;border-radius:999px;padding:14px 28px;background:#e0322b;color:#fff;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 12px 34px rgba(224,50,43,.45)}
+  button:hover{background:#e8454a}
+  small{display:block;margin-top:16px;color:#777}
+</style>
+</head>
+<body>
+<div class="glow" aria-hidden="true"></div>
+<div class="card">
+  <img src="build/logo.png" alt="">
+  <h1>Интернэт холболт алга</h1>
+  <p>Холболтоо шалгаад дахин оролдоно уу. Интернэт орж ирэхэд апп өөрөө дахин ачаалагдана.</p>
+  <button type="button" id="retry">Дахин оролдох</button>
+  <small>No internet connection — it will reconnect automatically.</small>
+</div>
+<script>
+  var site = new URLSearchParams(location.search).get('site') || 'https://nexus-media-d4b46.web.app/';
+  function go() { location.href = site; }
+  document.getElementById('retry').addEventListener('click', go);
+  window.addEventListener('online', function () { setTimeout(go, 800); });
+  setInterval(function () { if (navigator.onLine) fetch(site, { method: 'HEAD', cache: 'no-store', mode: 'no-cors' }).then(go).catch(function () {}); }, 15000);
+</script>
+</body>
+</html>
