@@ -1,7 +1,7 @@
 // Nexus Media — компьютерийн апп (Windows, Mac).
 // Апп нь вэбсайтыг өөртөө ачаалдаг тул сайтад гарсан өөрчлөлт (чат, төсөл, дизайн) апп дээр шууд харагдана.
 // Аппын өөрийнх нь шинэчлэлтийг electron-updater GitHub Releases-ээс автоматаар татна.
-const { app, BrowserWindow, shell, ipcMain, dialog, Menu, nativeImage, session } = require('electron');
+const { app, BrowserWindow, shell, ipcMain, dialog, Menu, nativeImage, session, desktopCapturer, systemPreferences } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -167,6 +167,22 @@ app.whenReady().then(() => {
   const ua = session.defaultSession.getUserAgent().replace(/\s?Electron\/[\d.]+/i, '').replace(/\s?(nexus-media|Nexus Media)\/[\d.]+/ig, '');
   app.userAgentFallback = ua;
   session.defaultSession.setUserAgent(ua);
+  // Дуудлага, дуут мессеж: микрофон, камер, мэдэгдлийг зөвхөн манай сайтад зөвшөөрнө
+  const siteUrl = (u) => { try { return new URL(u).origin === SITE_ORIGIN; } catch (e) { return false; } };
+  session.defaultSession.setPermissionRequestHandler(async (wc, permission, done, details) => {
+    const ok = ['media', 'notifications', 'fullscreen', 'display-capture', 'clipboard-sanitized-write'].includes(permission) && siteUrl((details && details.requestingUrl) || wc.getURL());
+    if (ok && permission === 'media' && isMac) {
+      try { for (const k of (details.mediaTypes || [])) await systemPreferences.askForMediaAccess(k === 'video' ? 'camera' : 'microphone'); } catch (e) {}
+    }
+    done(ok);
+  });
+  // Дэлгэц хуваалцах: үндсэн дэлгэцийг хуваалцана
+  session.defaultSession.setDisplayMediaRequestHandler((request, callback) => {
+    if (!siteUrl(request.securityOrigin)) { try { callback(); } catch (e) {} return; }
+    desktopCapturer.getSources({ types: ['screen'] }).then((sources) => {
+      if (sources.length) callback({ video: sources[0] }); else { try { callback(); } catch (e) {} }
+    }).catch(() => { try { callback(); } catch (e) {} });
+  });
   buildMenu();
   createWindow();
   setupUpdates();
