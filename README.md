@@ -13,11 +13,11 @@
 
 ## Шинэ хувилбар гаргах
 1. Өөрчлөлтөө commit хийнэ.
-2. Шинэ tag push хийнэ: `git tag v1.0.1 && git push origin v1.0.1`
+2. `package.json` доторх `"version"`-ийг нэмээд (жишээ нь 1.0.1) main руу push хийнэ.
 3. GitHub Actions Windows, Mac хувилбаруудыг бүтээж Releases-д нийтэлнэ (≈10–15 мин).
 4. Суусан аппууд 4 цаг тутам (мөн нээх бүрд) шинэчлэлт шалгаж, өөрөө шинэчлэгдэнэ.
 
-Хувилбарын дугаарыг tag-аас авдаг (package.json-ийн version-ийг гараар өөрчлөх шаардлагагүй).
+Release-ийн нэр (v1.0.1) package.json-ийн version-оос автоматаар үүснэ.
 
 ## Компьютер дээрээ турших (Windows)
 `build-windows.bat`-ыг давхар товшвол `dist\NexusMedia-Setup.exe` гарна.
